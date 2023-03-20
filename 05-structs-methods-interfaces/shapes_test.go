@@ -1,6 +1,9 @@
 package shapes
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestPerimeter(t *testing.T) {
 	rectangle := Rectangle{10.0, 10.0}
@@ -24,10 +27,13 @@ func TestArea(t *testing.T) {
 	}
 
 	for _, tt := range areaTests {
-		got := tt.shape.Area()
-		if got != tt.want {
-			t.Errorf("got %g want %g", got, tt.want)
-		}
+		// using tt.name from the case to use it as the `t.Run` test name
+		t.Run(reflect.TypeOf(tt.shape).Name(), func(t *testing.T) {
+			got := tt.shape.Area()
+			if got != tt.want {
+				t.Errorf("got %g want %g", got, tt.want)
+			}
+		})
 	}
 
 }
