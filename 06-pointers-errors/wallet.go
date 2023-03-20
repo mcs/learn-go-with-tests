@@ -20,6 +20,10 @@ func (w *Wallet) Balance() Bitcoin {
 	return w.balance
 }
 
-func (w *Wallet) Withdraw(amount Bitcoin) {
+func (w *Wallet) Withdraw(amount Bitcoin) error {
+	if amount > w.balance {
+		return fmt.Errorf("amount must not be greater than balance")
+	}
 	w.balance -= amount
+	return nil
 }
