@@ -9,8 +9,9 @@ func (e DictionaryErr) Error() string {
 }
 
 const (
-	ErrNotFound   = DictionaryErr("could not find the word you were looking for")
-	ErrWordExists = DictionaryErr("todo")
+	ErrNotFound         = DictionaryErr("could not find the word you were looking for")
+	ErrWordExists       = DictionaryErr("todo")
+	ErrWordDoesNotExist = DictionaryErr("")
 )
 
 func (d Dictionary) Search(word string) (string, error) {
@@ -34,6 +35,15 @@ func (d Dictionary) Add(key, value string) error {
 	return nil
 }
 
-func (d Dictionary) Update(word string, definition string) {
-	d[word] = definition
+func (d Dictionary) Update(word string, definition string) error {
+	_, err := d.Search(word)
+	switch err {
+	case ErrNotFound:
+		return ErrWordDoesNotExist
+	case nil:
+		d[word] = definition
+	default:
+		return err
+	}
+	return nil
 }
