@@ -1,8 +1,8 @@
 package main
 
-func Sum(numbers [5]int) int {
+func Sum(numbers []int) int {
 	var sum int
-	for i := 0; i < 5; i++ {
+	for i := 0; i < len(numbers); i++ {
 		sum += numbers[i]
 	}
 	return sum
