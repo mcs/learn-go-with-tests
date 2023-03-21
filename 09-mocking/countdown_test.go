@@ -2,34 +2,37 @@ package main
 
 import (
 	"bytes"
+	"reflect"
 	"testing"
 )
 
 func TestCountdown(t *testing.T) {
 	buffer := &bytes.Buffer{}
-	spySleeper := &SpySleeper{}
+	spySleeper := &SpyCountdownOperations{}
 
 	Countdown(buffer, spySleeper)
 
 	got := buffer.String()
-	want := `3
-2
-1
-Go!`
+	want := []string{write, sleep, write, sleep, write, sleep, write}
 
-	if got != want {
+	if reflect.DeepEqual(got, want) {
 		t.Errorf("got %q want %q", got, want)
 	}
 
-	if spySleeper.Calls != 3 {
-		t.Errorf("not enough calls to sleeper, want 3 got %d", spySleeper.Calls)
-	}
 }
 
-type SpySleeper struct {
-	Calls int
+type SpyCountdownOperations struct {
+	calls []string
 }
 
-func (s *SpySleeper) Sleep() {
-	s.Calls++
+const sleep = "sleep"
+const write = "write"
+
+func (s *SpyCountdownOperations) Sleep() {
+	s.calls = append(s.calls, sleep)
+}
+
+func (s *SpyCountdownOperations) Write(_ []byte) (_ int, _ error) {
+	s.calls = append(s.calls, write)
+	return
 }
