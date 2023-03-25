@@ -1,15 +1,19 @@
 package racer
 
 import (
+	"fmt"
 	"net/http"
+	"time"
 )
 
-func Racer(a, b string) (winner string) {
+func Racer(a, b string) (winner string, err error) {
 	select {
 	case <-ping(a):
-		return a
+		return a, err
 	case <-ping(b):
-		return b
+		return b, err
+	case <-time.After(10 * time.Second):
+		return "", fmt.Errorf("timed out waiting for %s and %s", a, b)
 	}
 }
 
