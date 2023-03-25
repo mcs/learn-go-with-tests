@@ -10,10 +10,11 @@ func Racer(a, b string) (winner string) {
 	bDuration := measureResponseTime(b)
 
 	if aDuration < bDuration {
-		return a
+		winner = a
+	} else {
+		winner = b
 	}
-
-	return b
+	return
 }
 
 func measureResponseTime(url string) time.Duration {
